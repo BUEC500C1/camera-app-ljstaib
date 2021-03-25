@@ -2,6 +2,8 @@
 
 Homework #4 for EC500 at Boston University, Spring 2021. Luke Staib (ljstaib@bu.edu) @2021. I chose Option 1, cloud based for this assignment.
 
+I will be using React Native Expo with Firebase for this assignment.
+
 # Status
 - Step 1: Completed
 - Step 2: Completed, runs on iOS emulator

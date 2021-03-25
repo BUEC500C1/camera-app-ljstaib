@@ -8,7 +8,8 @@ Upon downloading, run "npm install" to install all required libraries.
 
 # Status
 - Step 1: Completed
-- Step 2: Completed, runs on iOS emulator
+- Step 2: Completed, runs on iOS emulator and iPhone
+- Step 3: Completed, runs on iOS emulator and iPhone
 
 # Steps
 - Step 1:  Setup your REACT Native Environment

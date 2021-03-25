@@ -4,6 +4,8 @@ Homework #4 for EC500 at Boston University, Spring 2021. Luke Staib (ljstaib@bu.
 
 I will be using React Native Expo with Firebase for this assignment.
 
+Upon downloading, run "npm install" to install all required libraries.
+
 # Status
 - Step 1: Completed
 - Step 2: Completed, runs on iOS emulator

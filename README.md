@@ -2,9 +2,14 @@
 
 Homework #4 for EC500 at Boston University, Spring 2021. Luke Staib (ljstaib@bu.edu) @2021. I chose Option 1, cloud based for this assignment.
 
+# Expo
+I will be using the Expo framework for this assignment.
+
 # Status
 - Step 1: Completed
 - Step 2: Completed, runs on iOS emulator
+- Step 3: Completed
+- Step 4: Completed
 
 # Steps
 - Step 1:  Setup your REACT Native Environment

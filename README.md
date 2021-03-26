@@ -2,14 +2,9 @@
 
 Homework #4 for EC500 at Boston University, Spring 2021. Luke Staib (ljstaib@bu.edu) @2021. I chose Option 1, cloud based for this assignment.
 
-I will be using React Native Expo with Firebase for this assignment.
-
-Upon downloading, run "npm install" to install all required libraries.
-
 # Status
 - Step 1: Completed
-- Step 2: Completed, runs on iOS emulator and iPhone
-- Step 3: Completed, runs on iOS emulator and iPhone
+- Step 2: Completed, runs on iOS emulator
 
 # Steps
 - Step 1:  Setup your REACT Native Environment

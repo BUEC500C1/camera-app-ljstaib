@@ -1,6 +1,7 @@
 # camera-app-ljstaib
 
-Homework #4 for EC500 at Boston University, Spring 2021. Luke Staib (ljstaib@bu.edu) @2021. I chose Option 1, cloud based for this assignment.
+- Homework #4 for EC500 at Boston University, Spring 2021. Luke Staib (ljstaib@bu.edu) @2021. I chose Option 1, cloud based for this assignment.
+- To use, run "npm install" in the downloaded directory. Then, run "expo start" to load the application. Select "i" for iOS and "a" for Android.
 
 # Expo
 I will be using the Expo framework for this assignment.

@@ -1,3 +1,6 @@
+//Luke Staib 2021 ljstaib@bu.edu
+//Stylesheet
+
 import { StyleSheet } from 'react-native';
 
 export const Styles = StyleSheet.create({
@@ -17,6 +20,22 @@ export const Styles = StyleSheet.create({
     height: 300,
     width: 300
   },
+  map_button: {
+    backgroundColor: '#707070',
+    borderRadius: 5,
+    padding: 1,
+    marginTop: 10,
+    marginBottom: 10,
+    height: 50,
+    justifyContent: "center",
+    width: "30%",
+  },
+  home_title: {
+    color: "black",
+    fontSize: 48,
+    marginBottom: 20,
+    textAlign: "center",
+  },
   title: {
     color: "black",
     fontSize: 48,
@@ -24,6 +43,11 @@ export const Styles = StyleSheet.create({
   },
   text: {
     color: "black",
+    fontSize: 32,
+    textAlign: "center",
+  },
+  white_text: {
+    color: "white",
     fontSize: 32,
     textAlign: "center",
   },
@@ -43,7 +67,7 @@ export const Styles = StyleSheet.create({
     width: "40%",
   },
   count_button: {
-    backgroundColor: '#707070',
+    backgroundColor: '#808080',
     borderRadius: 5,
     padding: 1,
     marginTop: 10,
@@ -59,6 +83,18 @@ export const Styles = StyleSheet.create({
     height: 50,
     marginBottom: 10,
     width: 50,
+  },
+  camButtons: {
+    alignItems: 'center',
+    alignSelf: 'flex-end',
+    flex: 0.2,
+  },
+  generalButton: {
+    backgroundColor: '#00246b',
+    borderRadius: 5,
+    padding: 3,
+    marginTop: 10,
+    width: "80%",
   },
   snap_text: {
     color: 'white',

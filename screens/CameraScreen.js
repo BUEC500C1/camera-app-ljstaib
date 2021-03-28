@@ -2,12 +2,12 @@
 //Home Screen
 
 import React, { useEffect, useState } from 'react';
-import { View, TouchableOpacity, Text } from 'react-native';
+import { Image, Text, TouchableOpacity, View } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { Camera } from 'expo-camera';
 import { Styles } from '../Styles'
 
-var uri;
+var pic_saved = null;
 
 function CameraScreen({ navigation }) {
   const [permission, setPermission] = useState(null);
@@ -21,12 +21,15 @@ function CameraScreen({ navigation }) {
       setPermission(status === 'granted');
     })();
   }, []);
-
+  
   useEffect(() => {
-    (async () => {
-      const { status } = await Camera.requestPermissionsAsync();
-      setPermission(status === 'granted');
-    })();
+    var timer = setInterval(() => {
+      setPic(pic_saved)
+    }, 100);
+    return () => {
+      clearInterval(timer)
+      pic_saved = null
+    }
   }, []);
 
   if (permission === null) {
@@ -41,11 +44,7 @@ function CameraScreen({ navigation }) {
         <Camera style={{ flex: 1 }} ref={ref => setCamRef(ref)} type={camType} useCamera2Api={true}>
           <View style={Styles.camera}>
             <TouchableOpacity
-              style={{
-                alignItems: 'center',
-                alignSelf: 'flex-end',
-                flex: 0.2,
-              }}
+              style={Styles.camButtons}
               onPress={() => {
                 setCamType(
                   camType === Camera.Constants.Type.back
@@ -56,24 +55,46 @@ function CameraScreen({ navigation }) {
               <MaterialIcons style={{marginBottom: 5}} name="flip-camera-ios" size={44} color="white" />
             </TouchableOpacity>
             <TouchableOpacity onPress = {() => {
-                takePicture(camRef);
+                  savePic(camRef);
                 }
               } style={Styles.snap_button}>
             </TouchableOpacity>
             <TouchableOpacity onPress = {() => {
                 navigation.navigate('HomeScreen')}
               }
-              style={{
-                flex: 0.2,
-                alignSelf: 'flex-end',
-                alignItems: 'center',
-              }}>
+              style={Styles.camButtons}>
               <Text style={Styles.snap_text}> Back </Text>
             </TouchableOpacity>
           </View>
         </Camera>
       </View>
     );
+  }
+  else {
+    return (
+      <View style={Styles.container}>
+        <Text style={Styles.title}>View your picture below:</Text>
+        <Image source={{ uri: pic }} resizeMode="center" style={{width: 350, height: 467}}/>
+        <TouchableOpacity onPress = {() => {pic_saved = null} } style={Styles.generalButton}>
+          <Text style={Styles.white_text}>Take another picture!</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress = {() => {navigation.navigate('HomeScreen')} } style={Styles.generalButton}>
+          <Text style={Styles.white_text}>Back to home</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  }
+}
+
+async function savePic(camRef)
+{
+  if (camRef) {
+    //This crashes the app on an Android simulator...
+    let photo = await camRef.takePictureAsync({
+      aspect: [4,3],
+      quality: 0.8,
+    })
+    pic_saved = photo.uri
   }
 }
 

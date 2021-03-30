@@ -10,6 +10,9 @@ I will be using the Expo framework for this assignment.
 - Step 2: Completed, runs on iOS emulator
 - Step 3: Completed
 - Step 4: Completed
+- Step 5: Completed
+- Step 6: Completed
+(For steps 5+6 just need user authentication)
 
 # Steps
 - Step 1:  Setup your REACT Native Environment

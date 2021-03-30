@@ -77,10 +77,16 @@ function HomeScreen({ navigation }) {
           <Text style={Styles.button_text}>Zoom In</Text>
         </TouchableOpacity>
       </View>
-      <TouchableOpacity style={Styles.nav_button}
-        onPress = {() => navigation.navigate('CameraScreen')}>
-        <Text style={Styles.button_text}>To Camera</Text>
-      </TouchableOpacity>
+      <View style={Styles.count_view}>
+        <TouchableOpacity style={Styles.nav_button}
+          onPress = {() => navigation.navigate('CameraScreen')}>
+          <Text style={Styles.button_text}>To Camera</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={Styles.nav_button}
+          onPress = {() => navigation.navigate('PhotoList')}>
+          <Text style={Styles.button_text}>View Pictures</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }

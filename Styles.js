@@ -25,21 +25,31 @@ export const Styles = StyleSheet.create({
     borderRadius: 5,
     padding: 1,
     marginTop: 10,
-    marginBottom: 10,
+    marginBottom: 5,
     height: 50,
     justifyContent: "center",
-    width: "30%",
+    width: 115,
   },
   home_title: {
     color: "black",
     fontSize: 48,
-    marginBottom: 20,
+    marginBottom: 10,
     textAlign: "center",
   },
   title: {
     color: "black",
-    fontSize: 48,
+    fontSize: 36,
     textAlign: "center",
+  },
+  name_input_text: {
+    backgroundColor: "white",
+    borderColor: "black",
+    borderRadius: 5,
+    borderWidth: 2,
+    color: "black",
+    fontSize: 32,
+    textAlign: "center",
+    width: "80%"
   },
   text: {
     color: "black",
@@ -104,7 +114,14 @@ export const Styles = StyleSheet.create({
   count_view: {
     flexDirection: "row",
     justifyContent: "space-evenly",
-    marginBottom: 10,
     width: "100%",
+  },
+  list_text: {
+    color: 'black',
+    fontSize: 18,
+  },
+  list_pic: {
+    height: 125,
+    width: 125,
   },
 });

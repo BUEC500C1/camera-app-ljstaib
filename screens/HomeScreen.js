@@ -4,13 +4,14 @@
 import React, { useState } from 'react';
 import MapView, { Marker } from 'react-native-maps';
 import { View, TouchableOpacity, Text } from 'react-native';
-import { Styles } from '../Styles'
+import { Styles } from '../Styles';
+
+import * as firebase from 'firebase';
 
 function HomeScreen({ navigation }) {
-  const [count, setCount] = useState(0);
-  const count_up = () => setCount(prevCount => prevCount + 1);
-  const count_down = () => setCount(prevCount => prevCount - 1);
-  const reset_count = () => setCount(0);
+  const currentUser = firebase.auth().currentUser;
+  const U_ID = currentUser.uid;
+  const user_email = currentUser.email;
   
   const initial_region = { //At Boston University
     latitude: 42.3505,
@@ -32,22 +33,7 @@ function HomeScreen({ navigation }) {
   
   return (
     <View style={Styles.container}>
-      <Text style={Styles.home_title}>Home Screen</Text>
-      <Text style={Styles.text}>Counter: {count}</Text>
-      <View style={Styles.count_view}>
-        <TouchableOpacity style={Styles.count_button}
-          onPress = {() => {count_up()} }>
-          <Text style={Styles.button_text}>+1</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={Styles.count_button}
-          onPress = {() => {count_down()} }>
-          <Text style={Styles.button_text}>-1</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={Styles.count_button}
-          onPress = {() => {reset_count()} }>
-          <Text style={Styles.button_text}>Reset</Text>
-        </TouchableOpacity>
-      </View>
+      <Text style={Styles.home_title}>Welcome, {user_email}</Text>
       <MapView style={Styles.map}
         region={{
           latitude: the_region.latitude,
@@ -86,6 +72,10 @@ function HomeScreen({ navigation }) {
           onPress = {() => navigation.navigate('PhotoList')}>
           <Text style={Styles.button_text}>View Pictures</Text>
         </TouchableOpacity>
+        <TouchableOpacity style={Styles.nav_button}
+          onPress = {() => signOut(navigation)}>
+          <Text style={Styles.button_text}>Log Out</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -121,6 +111,18 @@ function zoomOut(reg) {
     new_region.longitudeDelta = reg.longitudeDelta + 0.01
   }
   return new_region
+}
+
+async function signOut(navigation) {
+  firebase.auth().signOut()
+  .then(function() {
+    navigation.navigate('LoginScreen')
+  })
+  .catch(function(e) {
+    var errorCode = e.code;
+    var errorMessage = e.message;
+    console.log("ERROR: Code " + String(errorCode) + " with message " + String(errorMessage));
+  });
 }
 
 export default HomeScreen;

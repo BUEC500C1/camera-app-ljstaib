@@ -6,12 +6,13 @@ import React from 'react';
 import * as firebase from 'firebase';
 
 //Screens
+import LoginScreen from './screens/LoginScreen';
+import SignUpScreen from './screens/SignUpScreen';
 import HomeScreen from './screens/HomeScreen';
 import CameraScreen from './screens/CameraScreen';
 import PhotoList from './screens/PhotoList';
 
 //Stack Container (App Organization)
-import { StatusBar } from 'expo-status-bar';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
@@ -20,8 +21,10 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        <Stack.Screen name="HomeScreen" component={HomeScreen} options={{ title: 'Home Screen' }}/>
-        <Stack.Screen name="CameraScreen" component={CameraScreen} options={{ title: 'Camera Screen' }}/>
+        <Stack.Screen name="LoginScreen" component={LoginScreen} options={{ title: 'Log In' }}/>
+        <Stack.Screen name="SignUpScreen" component={SignUpScreen} options={{ title: 'Sign Up' }}/>
+        <Stack.Screen name="HomeScreen" component={HomeScreen} options={{ title: 'Home' }}/>
+        <Stack.Screen name="CameraScreen" component={CameraScreen} options={{ title: 'Camera' }}/>
         <Stack.Screen name="PhotoList" component={PhotoList} options={{ title: 'Your Pictures' }}/>
       </Stack.Navigator>
     </NavigationContainer>

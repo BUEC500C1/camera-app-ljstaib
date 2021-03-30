@@ -20,6 +20,9 @@ function CameraScreen({ navigation }) {
   const [pic, setPic] = useState(null);
   const [pictureName, setPictureName] = useState("");
   
+  const currentUser = firebase.auth().currentUser;
+  const U_ID = currentUser.uid;
+  
   useEffect(() => {
     (async () => {
       const { status } = await Camera.requestPermissionsAsync();
@@ -94,7 +97,7 @@ function CameraScreen({ navigation }) {
         <TouchableOpacity onPress = {() => {pic_saved = null; setPictureName(null);} } style={Styles.generalButton}>
           <Text style={Styles.white_text}>Take another picture!</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress = {() => {Keyboard.dismiss(); storePic(pic_saved, pictureName); setPictureName(null);}} style={Styles.generalButton}>
+        <TouchableOpacity onPress = {() => {Keyboard.dismiss(); storePic(U_ID, pic_saved, pictureName); setPictureName(null);}} style={Styles.generalButton}>
           <Text style={Styles.white_text}>Save picture!</Text>
         </TouchableOpacity>
       </View>
@@ -115,7 +118,7 @@ async function savePic(camRef)
   }
 }
 
-async function storePic(uri, pic_name)
+async function storePic(U_ID, uri, pic_name)
 {
   pic_name = pic_name.trim() //Delete extra whitespace
   var file_name = pic_name.replace(/  +/g, '_'); //Replace spaces with underscores for storage
@@ -134,7 +137,7 @@ async function storePic(uri, pic_name)
     };
     const response = await fetch(uri);
     const blob = await response.blob();
-    const ref = firebase.storage().ref().child(`pictures/${file_name}`);
+    const ref = firebase.storage().ref().child(`pictures/${U_ID}/${file_name}`); //Store by user IDs
     ref.put(blob, metadata)
     .then((snapshot) => {
       console.log("INFO: User uploaded a picture named " + pic_name);

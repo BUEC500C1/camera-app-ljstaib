@@ -10,6 +10,26 @@ export const Styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  app_title: {
+    color: "black",
+    fontFamily: 'Helvetica-Bold',
+    fontSize: 48,
+    textAlign: "center",
+  },
+  app_title_marginbottom: {
+    color: "black",
+    fontFamily: 'Helvetica-Bold',
+    fontSize: 48,
+    marginBottom: 20,
+    textAlign: "center",
+  },
+  small_text: {
+    color: 'black',
+    fontFamily: 'Helvetica',
+    fontSize: 16,
+    marginBottom: 10,
+    textAlign: 'center',
+  },
   camera: {
     backgroundColor: 'transparent',
     flex: 1,
@@ -21,7 +41,7 @@ export const Styles = StyleSheet.create({
     width: 300
   },
   map_button: {
-    backgroundColor: '#707070',
+    backgroundColor: '#ffe29c',
     borderRadius: 5,
     padding: 1,
     marginTop: 10,
@@ -32,8 +52,10 @@ export const Styles = StyleSheet.create({
   },
   home_title: {
     color: "black",
-    fontSize: 48,
-    marginBottom: 10,
+    fontSize: 32,
+    marginLeft: 10,
+    marginRight: 10,
+    marginBottom: 20,
     textAlign: "center",
   },
   title: {
@@ -62,22 +84,22 @@ export const Styles = StyleSheet.create({
     textAlign: "center",
   },
   button_text: {
-    color: "white",
-    fontSize: 24,
+    color: "gray",
+    fontSize: 16,
     textAlign: "center",
   },
   nav_button: {
-    backgroundColor: '#707070',
+    backgroundColor: '#fec79c',
     borderRadius: 5,
     padding: 1,
     marginTop: 10,
     marginBottom: 10,
     height: 50,
     justifyContent: "center",
-    width: "40%",
+    width: 115,
   },
   count_button: {
-    backgroundColor: '#808080',
+    backgroundColor: '#ffe29c',
     borderRadius: 5,
     padding: 1,
     marginTop: 10,
@@ -123,5 +145,26 @@ export const Styles = StyleSheet.create({
   list_pic: {
     height: 125,
     width: 125,
+  },
+  auth_input_text: {
+    backgroundColor: "white",
+    borderColor: "black",
+    borderRadius: 5,
+    borderWidth: 2,
+    color: "black",
+    fontSize: 24,
+    fontFamily: "Helvetica",
+    marginBottom: 10,
+    textAlign: "center",
+    width: "80%"
+  },
+  auth_button: {
+    backgroundColor: '#ffe29c',
+    borderRadius: 30,
+    padding: 1,
+    marginBottom: 10,
+    height: 50,
+    justifyContent: "center",
+    width: "60%",
   },
 });

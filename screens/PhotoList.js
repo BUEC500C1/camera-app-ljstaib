@@ -12,9 +12,9 @@ var PictureArray = new Array(); //Store array of images and data
 
 //View at end is a temporary space in between list elements
 const ListItem = ({date, name, pic}) => (
-  <View style={{marginBottom: 30, marginLeft: 30, marginRight: 30, marginTop: 10}}>
+  <View style={{borderColor: 'black', borderWidth: 2, padding: 5, marginBottom: 30, marginLeft: 20, marginRight: 20, marginTop: 10, width: 145}}>
     <View>
-      <Image style={Styles.list_pic} source={{uri: pic}}/>
+      <Image style={Styles.list_pic} resizeMode={'contain'} source={{uri: pic}}/>
     </View>
     <View>
       <Text style={Styles.list_text}>{name}</Text>
@@ -26,10 +26,13 @@ const ListItem = ({date, name, pic}) => (
 function PhotoList({ navigation }) {
   const [listItems, setListItems] = useState(null);
   const renderListItem = ({item}) => <ListItem pic={item.pic} name={item.pic_name} date={item.date_created} />;
+  
+  const currentUser = firebase.auth().currentUser;
+  const U_ID = currentUser.uid;
 
   useEffect(() => {
     const loadList = async () => {
-      await getRooms();
+      await getRooms(U_ID);
       setListItems(PictureArray);
       PictureArray = [];
       console.log("INFO: Loaded array of images and metadata")
@@ -44,14 +47,14 @@ function PhotoList({ navigation }) {
   );
 }
 
-async function getRooms() {
+async function getRooms(U_ID) {
   console.log("INFO: getRooms() called")
   var folderRef, picRef, storageRef
   var date_created, id, path, pic, pic_name
   var picPaths = new Array();
   
   var storageRef = firebase.storage().ref()
-  var folderRef = storageRef.child(`pictures`)
+  var folderRef = storageRef.child(`pictures/${U_ID}`)
   await folderRef.listAll()
   .then((result) => {
     result.items.forEach((itemRef) => { //Each item
@@ -68,6 +71,9 @@ async function getRooms() {
         .then((metadata) => {
           id = metadata.customMetadata.ID
           pic_name = metadata.customMetadata.Name
+          if (pic_name.length > 20) { //Prevents problems on image list screen
+            pic_name = pic_name.slice(0,20) + "..."
+          }
           date_created = String(new Date(metadata.timeCreated)) //Just retrieving day, month, year
           date_created = date_created.split(" ").slice(1,4) //Display date: Month, Day, then Year
           date_created = date_created[0] + " " + date_created[1] + " " + date_created[2]

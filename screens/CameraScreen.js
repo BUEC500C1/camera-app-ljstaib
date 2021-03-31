@@ -1,20 +1,34 @@
 //Luke Staib 2021 ljstaib@bu.edu
 //Home Screen
 
+//React Native and Firebase
 import React, { useEffect, useState } from 'react';
 import { Image, Keyboard, Text, TextInput, TouchableOpacity, View } from 'react-native';
-import { MaterialIcons } from '@expo/vector-icons';
-import { Camera } from 'expo-camera';
-import { Styles } from '../Styles';
 import firebase from 'firebase/app';
 
+//Camera, Pictures, Face Detection
+import { Camera } from 'expo-camera';
+import * as ImageManipulator from 'expo-image-manipulator';
+import * as FaceDetector from 'expo-face-detector';
+import { BlurView } from 'expo-blur';
+
+//Barcodes
+import { BarCodeScanner} from 'expo-barcode-scanner';
+
+//Styling, Icons
+import { MaterialIcons } from '@expo/vector-icons';
+import { Styles } from '../Styles';
+
+//Storing a UUIDv4 for each image
 import 'react-native-get-random-values';
 import { v4 as uuidv4 } from 'uuid';
 
+//URI of captured image
 var pic_saved = null;
 
 function CameraScreen({ navigation }) {
-  const [permission, setPermission] = useState(null);
+  const [permissionCam, setPermissionCam] = useState(null);
+  const [permissionBarcode, setPermissionBarcode] = useState(null);
   const [camRef, setCamRef] = useState(null);
   const [camType, setCamType] = useState(Camera.Constants.Type.back);
   const [pic, setPic] = useState(null);
@@ -26,7 +40,14 @@ function CameraScreen({ navigation }) {
   useEffect(() => {
     (async () => {
       const { status } = await Camera.requestPermissionsAsync();
-      setPermission(status === 'granted');
+      setPermissionCam(status === 'granted');
+    })();
+  }, []);
+  
+  useEffect(() => {
+    (async () => {
+      const { status } = await BarCodeScanner.requestPermissionsAsync();
+      setPermissionBarcode(status === 'granted');
     })();
   }, []);
   
@@ -34,36 +55,39 @@ function CameraScreen({ navigation }) {
     var timer = setInterval(() => {
       setPic(pic_saved)
     }, 100);
-    return () => {
+    return () => { //Clean up to avoid memory leaks
       clearInterval(timer)
       pic_saved = null
     }
   }, []);
 
-  if (permission === null) {
-    return <Text>Unable to start camera</Text>;
+  if (permissionCam === null || permissionBarcode === null) {
+    return <Text>Unable to start camera. Please enable camera and barcode permissions for this application.</Text>;
   }
-  if (permission === false) {
-    return <Text>No access to camera</Text>;
+  if (permissionCam === false || permissionBarcode === false) {
+    return <Text>No access to camera. Please enable camera and barcode permissions for this application.</Text>;
   }
   if (pic === null) {
     return (
       <View style={{ flex: 1 }}>
-        <Camera style={{ flex: 1 }} ref={ref => setCamRef(ref)} type={camType} useCamera2Api={true}>
+        <Camera
+          style={{ flex: 1 }}
+          ref={ref => setCamRef(ref)}
+          type={camType}
+          useCamera2Api={true}
+        >
           <View style={Styles.camera}>
             <TouchableOpacity
               style={Styles.camButtons}
               onPress={() => {
                 setCamType(
-                  camType === Camera.Constants.Type.back
-                    ? Camera.Constants.Type.front
-                    : Camera.Constants.Type.back
+                  camType === Camera.Constants.Type.back ? Camera.Constants.Type.front : Camera.Constants.Type.back
                 );
               }}>
               <MaterialIcons style={{marginBottom: 5}} name="flip-camera-ios" size={44} color="white" />
             </TouchableOpacity>
             <TouchableOpacity onPress = {() => {
-                  savePic(camRef);
+                  savePic(camRef, camType);
                 }
               } style={Styles.snap_button}>
             </TouchableOpacity>
@@ -105,16 +129,26 @@ function CameraScreen({ navigation }) {
   }
 }
 
-async function savePic(camRef)
+async function savePic(camRef, type)
 {
   console.log("INFO: savePic() called")
   if (camRef) {
-    //This crashes the app on an Android simulator...
-    let photo = await camRef.takePictureAsync({
-      aspect: [4,3],
-      quality: 0.8,
-    })
-    pic_saved = photo.uri
+    if (type === Camera.Constants.Type.back) {
+      //This crashes the app on an Android simulator...
+      let photo = await camRef.takePictureAsync({
+        aspect: [4,3],
+        quality: 0.75,
+      })
+      pic_saved = photo.uri
+    }
+    else { //Mirror if front camera to avoid mirroring done by camera (aka user sees the picture they'll take)
+      let photo = await camRef.takePictureAsync({
+        aspect: [4,3],
+        quality: 0.75,
+      })
+      let modified_photo = await ImageManipulator.manipulateAsync(photo.uri, [{ flip: ImageManipulator.FlipType.Horizontal}], {compress: 1, format: 'jpeg'});
+      pic_saved = modified_photo.uri
+    }
   }
 }
 
@@ -135,6 +169,14 @@ async function storePic(U_ID, uri, pic_name)
         'Name': pic_name,
       }
     };
+    
+    //Face detection and blurring
+    let faceQuery = await FaceDetector.detectFacesAsync(uri, { mode: FaceDetector.Constants.fast });
+    if (faceQuery.faces.length !== 0)
+    {
+      console.log("Face detected, blurring now.")
+    }
+    
     const response = await fetch(uri);
     const blob = await response.blob();
     const ref = firebase.storage().ref().child(`pictures/${U_ID}/${file_name}`); //Store by user IDs

@@ -12,6 +12,8 @@ I will be using the Expo framework for this assignment. Expo is useful as it is 
 - Step 4: Completed
 - Step 5: Completed
 - Step 6: Completed
+- Step 7: App can detect faces, just need to figure out how to blur image now
+- Step 8: Imported library to scan barcodes
 
 # Steps
 - Step 1:  Setup your REACT Native Environment

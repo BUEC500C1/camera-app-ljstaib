@@ -37,8 +37,10 @@ export const Styles = StyleSheet.create({
     justifyContent: 'space-evenly',
   },
   map: {
-    height: 300,
-    width: 300
+    marginTop: 10,
+    marginBottom: 10,
+    height: 200,
+    width: 200
   },
   map_button: {
     backgroundColor: '#ffe29c',
@@ -87,6 +89,24 @@ export const Styles = StyleSheet.create({
     color: "gray",
     fontSize: 16,
     textAlign: "center",
+  },
+  scanner_button: {
+    alignSelf: "center",
+    backgroundColor: '#feac9c',
+    borderRadius: 5,
+    padding: 10,
+    marginTop: 10,
+    textAlign: "center",
+  },
+  log_out_button: {
+    backgroundColor: '#feac9c',
+    borderRadius: 5,
+    padding: 1,
+    marginTop: 10,
+    marginBottom: 10,
+    height: 50,
+    justifyContent: "center",
+    width: 115,
   },
   nav_button: {
     backgroundColor: '#fec79c',

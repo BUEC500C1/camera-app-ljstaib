@@ -1,5 +1,5 @@
 //Luke Staib 2021 ljstaib@bu.edu
-//Home Screen
+//Camera Screen
 
 //React Native and Firebase
 import React, { useEffect, useState } from 'react';
@@ -27,15 +27,31 @@ import { v4 as uuidv4 } from 'uuid';
 var pic_saved = null;
 
 function CameraScreen({ navigation }) {
+  //Camera
   const [permissionCam, setPermissionCam] = useState(null);
-  const [permissionBarcode, setPermissionBarcode] = useState(null);
   const [camRef, setCamRef] = useState(null);
   const [camType, setCamType] = useState(Camera.Constants.Type.back);
   const [pic, setPic] = useState(null);
   const [pictureName, setPictureName] = useState("");
   
+  //Barcodes
+  const [permissionBarcode, setPermissionBarcode] = useState(null);
+  const [scanState, setScanState] = useState(false);
+  const [barcodeType, setBarcodeType] = useState(null);
+  const [barcodeData, setBarcodeData] = useState(null);
+  
+  //User ID
   const currentUser = firebase.auth().currentUser;
   const U_ID = currentUser.uid;
+  
+  const handleBarcodeScan = ({ type, data }) => {
+    setScanState(true);
+    setBarcodeType(type);
+    setBarcodeData(data);
+    savePic(camRef)
+    alert("Bar code scanned!")
+    console.log(`Bar code with type "${type}" and data "${data}" has been scanned.`)
+  };
   
   useEffect(() => {
     (async () => {
@@ -62,10 +78,10 @@ function CameraScreen({ navigation }) {
   }, []);
 
   if (permissionCam === null || permissionBarcode === null) {
-    return <Text>Unable to start camera. Please enable camera and barcode permissions for this application.</Text>;
+    return <Text>Unable to start camera. Please enable camera permissions for this application.</Text>;
   }
   if (permissionCam === false || permissionBarcode === false) {
-    return <Text>No access to camera. Please enable camera and barcode permissions for this application.</Text>;
+    return <Text>No access to camera. Please enable camera permissions for this application.</Text>;
   }
   if (pic === null) {
     return (
@@ -75,6 +91,7 @@ function CameraScreen({ navigation }) {
           ref={ref => setCamRef(ref)}
           type={camType}
           useCamera2Api={true}
+          onBarCodeScanned={scanState ? undefined : handleBarcodeScan}
         >
           <View style={Styles.camera}>
             <TouchableOpacity
@@ -87,7 +104,7 @@ function CameraScreen({ navigation }) {
               <MaterialIcons style={{marginBottom: 5}} name="flip-camera-ios" size={44} color="white" />
             </TouchableOpacity>
             <TouchableOpacity onPress = {() => {
-                  savePic(camRef, camType);
+                  savePic(camRef);
                 }
               } style={Styles.snap_button}>
             </TouchableOpacity>
@@ -118,10 +135,10 @@ function CameraScreen({ navigation }) {
             style = {Styles.name_input_text}
             value = {pictureName}
         />
-        <TouchableOpacity onPress = {() => {pic_saved = null; setPictureName(null);} } style={Styles.generalButton}>
+        <TouchableOpacity onPress = {() => {pic_saved = null; setPictureName(null); setScanState(false); setBarcodeType(null); setBarcodeData(null);} } style={Styles.generalButton}>
           <Text style={Styles.white_text}>Take another picture!</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress = {() => {Keyboard.dismiss(); storePic(U_ID, pic_saved, pictureName); setPictureName(null);}} style={Styles.generalButton}>
+        <TouchableOpacity onPress = {() => {Keyboard.dismiss(); storePic(U_ID, pic_saved, pictureName, barcodeType, barcodeData); setPictureName(null); setPictureName(null); setScanState(false); setBarcodeType(null); setBarcodeData(null);}} style={Styles.generalButton}>
           <Text style={Styles.white_text}>Save picture!</Text>
         </TouchableOpacity>
       </View>
@@ -129,35 +146,32 @@ function CameraScreen({ navigation }) {
   }
 }
 
-async function savePic(camRef, type)
+async function savePic(camRef)
 {
   console.log("INFO: savePic() called")
   if (camRef) {
-    if (type === Camera.Constants.Type.back) {
-      //This crashes the app on an Android simulator...
-      let photo = await camRef.takePictureAsync({
-        aspect: [4,3],
-        quality: 0.75,
-      })
-      pic_saved = photo.uri
-    }
-    else { //Mirror if front camera to avoid mirroring done by camera (aka user sees the picture they'll take)
-      let photo = await camRef.takePictureAsync({
-        aspect: [4,3],
-        quality: 0.75,
-      })
-      let modified_photo = await ImageManipulator.manipulateAsync(photo.uri, [{ flip: ImageManipulator.FlipType.Horizontal}], {compress: 1, format: 'jpeg'});
-      pic_saved = modified_photo.uri
-    }
+    //This crashes the app on an Android simulator...
+    let photo = await camRef.takePictureAsync({
+      aspect: [4,3],
+      quality: 0.75,
+    })
+    pic_saved = photo.uri
+    console.log(pic_saved)
   }
 }
 
-async function storePic(U_ID, uri, pic_name)
+async function storePic(U_ID, uri, pic_name, bar_type, bar_data)
 {
   pic_name = pic_name.trim() //Delete extra whitespace
   var file_name = pic_name.replace(/  +/g, '_'); //Replace spaces with underscores for storage
   file_name = pic_name.replace(' ', '_'); //Replace spaces with underscores for storage
+  console.log("File name:")
+  console.log(file_name)
   pic_name = pic_name.replace(/  +/g, ' ');
+  
+  //Check if barcode data, if not set data field to N/A
+  bar_type = bar_type ? bar_type : "N/A";
+  bar_data = bar_data ? bar_data : "N/A";
   
   if (pic_name !== null && pic_name !== "") {
     console.log("INFO: storePic() called")
@@ -167,6 +181,8 @@ async function storePic(U_ID, uri, pic_name)
       customMetadata: {
         'ID': uid,
         'Name': pic_name,
+        'Barcode Type': bar_type,
+        'Barcode Data': bar_data,
       }
     };
     
@@ -175,8 +191,10 @@ async function storePic(U_ID, uri, pic_name)
     if (faceQuery.faces.length !== 0)
     {
       console.log("Face detected, blurring now.")
+      //Need to figure out how to blur only a certain area
     }
     
+    console.log(uri)
     const response = await fetch(uri);
     const blob = await response.blob();
     const ref = firebase.storage().ref().child(`pictures/${U_ID}/${file_name}`); //Store by user IDs
@@ -194,6 +212,5 @@ async function storePic(U_ID, uri, pic_name)
     alert("Please enter a name for this image.")
   }
 }
-
 
 export default CameraScreen;

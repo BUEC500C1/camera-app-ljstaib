@@ -72,7 +72,9 @@ function HomeScreen({ navigation }) {
           onPress = {() => navigation.navigate('PhotoList')}>
           <Text style={Styles.button_text}>View Pictures</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={Styles.nav_button}
+      </View>
+      <View style={Styles.count_view}>
+        <TouchableOpacity style={Styles.log_out_button}
           onPress = {() => signOut(navigation)}>
           <Text style={Styles.button_text}>Log Out</Text>
         </TouchableOpacity>

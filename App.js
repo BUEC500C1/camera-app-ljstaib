@@ -32,13 +32,13 @@ export default function App() {
 }
 
 const firebaseConfig = {
-    apiKey: "AIzaSyDveyLpqBpUOC7TBnITMNW9anyOFxUpHfg",
-    authDomain: "scannerappec500.firebaseapp.com",
-    projectId: "scannerappec500",
-    storageBucket: "scannerappec500.appspot.com",
-    messagingSenderId: "78270138749",
-    appId: "1:78270138749:web:4768a1da87f3b3345f6414",
-    measurementId: "G-MVQ1H96EM1"
+  apiKey: "AIzaSyDveyLpqBpUOC7TBnITMNW9anyOFxUpHfg",
+  authDomain: "scannerappec500.firebaseapp.com",
+  projectId: "scannerappec500",
+  storageBucket: "scannerappec500.appspot.com",
+  messagingSenderId: "78270138749",
+  appId: "1:78270138749:web:4768a1da87f3b3345f6414",
+  measurementId: "G-MVQ1H96EM1"
 };
 
 if (!firebase.apps.length) {

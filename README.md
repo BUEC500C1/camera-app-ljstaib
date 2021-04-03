@@ -14,7 +14,8 @@ I will be using the Expo framework for this assignment. Expo is useful as it is 
 - Step 6: Completed
 - Step 7: App can detect faces, just need to figure out how to blur image now
 - Step 8: Completed
-- Step 9: Partially completed, having an issue with the images being stored but I will fix this
+- Step 9: Completed
+- Putting images on a map: In progress
 
 # Steps
 - Step 1:  Setup your REACT Native Environment

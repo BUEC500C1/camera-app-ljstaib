@@ -32,7 +32,7 @@ function PhotoList({ navigation }) {
 
   useEffect(() => {
     const loadList = async () => {
-      await getRooms(U_ID);
+      await getPics(U_ID);
       setListItems(PictureArray);
       PictureArray = [];
       console.log("INFO: Loaded array of images and metadata")
@@ -47,8 +47,8 @@ function PhotoList({ navigation }) {
   );
 }
 
-async function getRooms(U_ID) {
-  console.log("INFO: getRooms() called")
+async function getPics(U_ID) {
+  console.log("INFO: getPics() called")
   var folderRef, picRef, storageRef
   var date_created, id, path, pic, pic_name
   var picPaths = new Array();

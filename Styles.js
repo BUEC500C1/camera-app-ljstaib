@@ -39,8 +39,8 @@ export const Styles = StyleSheet.create({
   map: {
     marginTop: 10,
     marginBottom: 10,
-    height: 200,
-    width: 200
+    height: 250,
+    width: 250
   },
   map_button: {
     backgroundColor: '#ffe29c',
@@ -62,7 +62,8 @@ export const Styles = StyleSheet.create({
   },
   title: {
     color: "black",
-    fontSize: 36,
+    fontSize: 32,
+    marginBottom: 10,
     textAlign: "center",
   },
   name_input_text: {
@@ -142,7 +143,7 @@ export const Styles = StyleSheet.create({
     flex: 0.2,
   },
   generalButton: {
-    backgroundColor: '#00246b',
+    backgroundColor: '#ffc6c4',
     borderRadius: 5,
     padding: 3,
     marginTop: 10,

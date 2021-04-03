@@ -6,14 +6,14 @@ import React, { useEffect, useState } from 'react';
 import { Image, Keyboard, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import firebase from 'firebase/app';
 
-//Camera, Pictures, Face Detection
+//Camera, Face Detection, Location Storage
 import { Camera } from 'expo-camera';
-import * as ImageManipulator from 'expo-image-manipulator';
 import * as FaceDetector from 'expo-face-detector';
 import { BlurView } from 'expo-blur';
+import * as Location from 'expo-location';
 
 //Barcodes
-import { BarCodeScanner} from 'expo-barcode-scanner';
+import { BarCodeScanner } from 'expo-barcode-scanner';
 
 //Styling, Icons
 import { MaterialIcons } from '@expo/vector-icons';
@@ -26,6 +26,9 @@ import { v4 as uuidv4 } from 'uuid';
 //URI of captured image
 var pic_saved = null;
 
+//Current location of user
+var location = new Array();
+
 function CameraScreen({ navigation }) {
   //Camera
   const [permissionCam, setPermissionCam] = useState(null);
@@ -33,12 +36,17 @@ function CameraScreen({ navigation }) {
   const [camType, setCamType] = useState(Camera.Constants.Type.back);
   const [pic, setPic] = useState(null);
   const [pictureName, setPictureName] = useState("");
+  const [camReady, setCamReady] = useState(false);
   
   //Barcodes
   const [permissionBarcode, setPermissionBarcode] = useState(null);
   const [scanState, setScanState] = useState(false);
   const [barcodeType, setBarcodeType] = useState(null);
   const [barcodeData, setBarcodeData] = useState(null);
+  
+  //Location
+  const [permissionLocation, setPermissionLocation] = useState(null);
+  const [loc, setLoc] = useState(null);
   
   //User ID
   const currentUser = firebase.auth().currentUser;
@@ -68,8 +76,20 @@ function CameraScreen({ navigation }) {
   }, []);
   
   useEffect(() => {
+    (async () => {
+      let { status } = await Location.requestPermissionsAsync();
+      setPermissionLocation(status === 'granted');
+    })();
+  }, []);
+  
+  const onCamReady = () => {
+    setCamReady(true)
+  }
+  
+  useEffect(() => {
     var timer = setInterval(() => {
       setPic(pic_saved)
+      setLoc(location)
     }, 100);
     return () => { //Clean up to avoid memory leaks
       clearInterval(timer)
@@ -77,11 +97,11 @@ function CameraScreen({ navigation }) {
     }
   }, []);
 
-  if (permissionCam === null || permissionBarcode === null) {
-    return <Text>Unable to start camera. Please enable camera permissions for this application.</Text>;
+  if (permissionCam === null || permissionBarcode === null || permissionLocation === null) {
+    return <Text>Unable to start camera. Please enable camera and location permissions for this application.</Text>;
   }
-  if (permissionCam === false || permissionBarcode === false) {
-    return <Text>No access to camera. Please enable camera permissions for this application.</Text>;
+  if (permissionCam === false || permissionBarcode === false || permissionLocation === false) {
+    return <Text>No access to camera. Please enable camera and location permissions for this application.</Text>;
   }
   if (pic === null) {
     return (
@@ -92,10 +112,12 @@ function CameraScreen({ navigation }) {
           type={camType}
           useCamera2Api={true}
           onBarCodeScanned={scanState ? undefined : handleBarcodeScan}
+          onCameraReady={onCamReady}
         >
           <View style={Styles.camera}>
             <TouchableOpacity
               style={Styles.camButtons}
+              disabled={!camReady}
               onPress={() => {
                 setCamType(
                   camType === Camera.Constants.Type.back ? Camera.Constants.Type.front : Camera.Constants.Type.back
@@ -103,7 +125,7 @@ function CameraScreen({ navigation }) {
               }}>
               <MaterialIcons style={{marginBottom: 5}} name="flip-camera-ios" size={44} color="white" />
             </TouchableOpacity>
-            <TouchableOpacity onPress = {() => {
+            <TouchableOpacity disabled={!camReady} onPress = {() => {
                   savePic(camRef);
                 }
               } style={Styles.snap_button}>
@@ -123,7 +145,7 @@ function CameraScreen({ navigation }) {
     return (
       <View style={Styles.container}>
         <Text style={Styles.title}>View your picture below:</Text>
-        <Image source={{ uri: pic }} resizeMethod="scale" resizeMode="contain" style={{ marginTop: 5, marginBottom: 5, width: 300, height: 400}}/>
+        <Image source={{ uri: pic }} resizeMethod="scale" resizeMode="contain" style={{ marginTop: 5, marginBottom: 5, width: 250, height: 333}}/>
         <TextInput
             autoCapitalize = "none"
             autoCompleteType = "off"
@@ -135,10 +157,10 @@ function CameraScreen({ navigation }) {
             style = {Styles.name_input_text}
             value = {pictureName}
         />
-        <TouchableOpacity onPress = {() => {pic_saved = null; setPictureName(null); setScanState(false); setBarcodeType(null); setBarcodeData(null);} } style={Styles.generalButton}>
+        <TouchableOpacity onPress = {() => {pic_saved = null; location = null; setPictureName(null); setScanState(false); setBarcodeType(null); setBarcodeData(null);} } style={Styles.generalButton}>
           <Text style={Styles.white_text}>Take another picture!</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress = {() => {Keyboard.dismiss(); storePic(U_ID, pic_saved, pictureName, barcodeType, barcodeData); setPictureName(null); setPictureName(null); setScanState(false); setBarcodeType(null); setBarcodeData(null);}} style={Styles.generalButton}>
+        <TouchableOpacity onPress = {() => {Keyboard.dismiss(); storePic(U_ID, pic_saved, pictureName, barcodeType, barcodeData, location); setPictureName(null); setPictureName(null); setScanState(false); setBarcodeType(null); setBarcodeData(null);}} style={Styles.generalButton}>
           <Text style={Styles.white_text}>Save picture!</Text>
         </TouchableOpacity>
       </View>
@@ -154,13 +176,20 @@ async function savePic(camRef)
     let photo = await camRef.takePictureAsync({
       aspect: [4,3],
       quality: 0.75,
+      exif: true,
     })
+    //The method below is much faster than getCurrentPositionAsync() and is still accurate
+    let current_loc = await Location.getLastKnownPositionAsync({})
+    location.push(current_loc.coords.latitude, current_loc.coords.longitude)
+    console.log(`INFO: User's latitude and longitude: ${location}`)
     pic_saved = photo.uri
-    console.log(pic_saved)
+  }
+  else {
+    console.log("ERROR: No camera reference.")
   }
 }
 
-async function storePic(U_ID, uri, pic_name, bar_type, bar_data)
+async function storePic(UID, uri, pic_name, bar_type, bar_data, loc)
 {
   pic_name = pic_name.trim() //Delete extra whitespace
   var file_name = pic_name.replace(/  +/g, '_'); //Replace spaces with underscores for storage
@@ -169,9 +198,13 @@ async function storePic(U_ID, uri, pic_name, bar_type, bar_data)
   console.log(file_name)
   pic_name = pic_name.replace(/  +/g, ' ');
   
-  //Check if barcode data, if not set data field to N/A
-  bar_type = bar_type ? bar_type : "N/A";
-  bar_data = bar_data ? bar_data : "N/A";
+  //Check if barcode type and data exists, if not set barcode fields to N/A
+  if (bar_type === null) {
+    bar_type = "N/A"
+  }
+  if (bar_data === null) {
+    bar_data = "N/A"
+  }
   
   if (pic_name !== null && pic_name !== "") {
     console.log("INFO: storePic() called")
@@ -181,8 +214,10 @@ async function storePic(U_ID, uri, pic_name, bar_type, bar_data)
       customMetadata: {
         'ID': uid,
         'Name': pic_name,
-        'Barcode Type': bar_type,
-        'Barcode Data': bar_data,
+        'Barcode_Type': bar_type,
+        'Barcode_Data': bar_data,
+        'Latitude': loc[0],
+        'Longitude': loc[1],
       }
     };
     
@@ -194,12 +229,10 @@ async function storePic(U_ID, uri, pic_name, bar_type, bar_data)
       //Need to figure out how to blur only a certain area
     }
     
-    console.log(uri)
     const response = await fetch(uri);
     const blob = await response.blob();
-    const ref = firebase.storage().ref().child(`pictures/${U_ID}/${file_name}`); //Store by user IDs
-    ref.put(blob, metadata)
-    .then((snapshot) => {
+    const ref = firebase.storage().ref().child(`pictures/${UID}/${file_name}`); //Store by user IDs
+    ref.put(blob, metadata).then((snapshot) => {
       console.log("INFO: User uploaded a picture named " + pic_name);
       alert("Picture successfully uploaded.");
     })

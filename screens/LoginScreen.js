@@ -74,6 +74,7 @@ async function loginEmailPass(navigation, email, password) {
       //Email not verified
       console.log("ERROR: Email not verified.")
       alert("Please verify your email before logging in.")
+      
       signOut()
       return false
     }

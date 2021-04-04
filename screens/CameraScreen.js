@@ -3,7 +3,7 @@
 
 //React Native and Firebase
 import React, { useEffect, useState } from 'react';
-import { Image, Keyboard, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, Image, Keyboard, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import firebase from 'firebase/app';
 
 //Camera, Face Detection, Location Storage
@@ -29,6 +29,9 @@ var pic_saved = null;
 //Current location of user
 var location = new Array();
 
+//Loading variable
+var loading = false;
+
 function CameraScreen({ navigation }) {
   //Camera
   const [permissionCam, setPermissionCam] = useState(null);
@@ -47,6 +50,9 @@ function CameraScreen({ navigation }) {
   //Location
   const [permissionLocation, setPermissionLocation] = useState(null);
   const [loc, setLoc] = useState(null);
+  
+  //Loading
+  const [loadState, setLoadState] = useState(false);
   
   //User ID
   const currentUser = firebase.auth().currentUser;
@@ -90,6 +96,7 @@ function CameraScreen({ navigation }) {
     var timer = setInterval(() => {
       setPic(pic_saved)
       setLoc(location)
+      setLoadState(loading)
     }, 100);
     return () => { //Clean up to avoid memory leaks
       clearInterval(timer)
@@ -142,29 +149,39 @@ function CameraScreen({ navigation }) {
     );
   }
   else {
-    return (
-      <View style={Styles.container}>
-        <Text style={Styles.title}>View your picture below:</Text>
-        <Image source={{ uri: pic }} resizeMethod="scale" resizeMode="contain" style={{ marginTop: 5, marginBottom: 5, width: 250, height: 333}}/>
-        <TextInput
-            autoCapitalize = "none"
-            autoCompleteType = "off"
-            autoCorrect = {false}
-            maxLength = {32}
-            onChangeText = {pictureName => setPictureName(pictureName)}
-            onSubmitEditing = {()=> Keyboard.dismiss()}
-            placeholder = "Enter Name"
-            style = {Styles.name_input_text}
-            value = {pictureName}
-        />
-        <TouchableOpacity onPress = {() => {pic_saved = null; location = null; setPictureName(null); setScanState(false); setBarcodeType(null); setBarcodeData(null);} } style={Styles.generalButton}>
-          <Text style={Styles.white_text}>Take another picture!</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress = {() => {Keyboard.dismiss(); storePic(U_ID, pic_saved, pictureName, barcodeType, barcodeData, location); setPictureName(null); setPictureName(null); setScanState(false); setBarcodeType(null); setBarcodeData(null);}} style={Styles.generalButton}>
-          <Text style={Styles.white_text}>Save picture!</Text>
-        </TouchableOpacity>
-      </View>
-    );
+    if (loadState === false) {
+      return (
+        <View style={Styles.container}>
+          <Text style={Styles.title}>View your picture below:</Text>
+          <Image source={{ uri: pic }} resizeMethod="scale" resizeMode="contain" style={{ marginTop: 5, marginBottom: 5, width: 250, height: 333}}/>
+          <TextInput
+              autoCapitalize = "none"
+              autoCompleteType = "off"
+              autoCorrect = {false}
+              maxLength = {32}
+              onChangeText = {pictureName => setPictureName(pictureName)}
+              onSubmitEditing = {()=> Keyboard.dismiss()}
+              placeholder = "Enter Name"
+              style = {Styles.name_input_text}
+              value = {pictureName}
+          />
+          <TouchableOpacity onPress = {() => {pic_saved = null; location = null; setPictureName(null); setScanState(false); setBarcodeType(null); setBarcodeData(null);} } style={Styles.generalButton}>
+            <Text style={Styles.white_text}>Take another picture!</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress = {() => {Keyboard.dismiss(); storePic(U_ID, pic_saved, pictureName, barcodeType, barcodeData, location); setPictureName(null); setPictureName(null); setScanState(false); setBarcodeType(null); setBarcodeData(null);}} style={Styles.generalButton}>
+            <Text style={Styles.white_text}>Save picture!</Text>
+          </TouchableOpacity>
+        </View>
+      );
+    }
+    else {
+      return (
+        <View style={Styles.container}>
+          <Text style={{fontSize: 32, marginBottom: 10, textAlign: "center"}}>Saving image...</Text>
+          <ActivityIndicator color="#b1b800" size="large" />
+        </View>
+      );
+    }
   }
 }
 
@@ -181,7 +198,7 @@ async function savePic(camRef)
     //The method below is much faster than getCurrentPositionAsync() and is still accurate
     let current_loc = await Location.getLastKnownPositionAsync({})
     location.push(current_loc.coords.latitude, current_loc.coords.longitude)
-    console.log(`INFO: User's latitude and longitude: ${location}`)
+    //console.log(`INFO: User's latitude and longitude: ${location}`)
     pic_saved = photo.uri
   }
   else {
@@ -191,6 +208,7 @@ async function savePic(camRef)
 
 async function storePic(UID, uri, pic_name, bar_type, bar_data, loc)
 {
+  loading = true
   pic_name = pic_name.trim() //Delete extra whitespace
   var file_name = pic_name.replace(/  +/g, '_'); //Replace spaces with underscores for storage
   file_name = pic_name.replace(' ', '_'); //Replace spaces with underscores for storage
@@ -226,7 +244,7 @@ async function storePic(UID, uri, pic_name, bar_type, bar_data, loc)
     if (faceQuery.faces.length !== 0)
     {
       console.log("Face detected, blurring now.")
-      //Need to figure out how to blur only a certain area
+      //Looked everywhere and couldn't find a way to blur a detected face...
     }
     
     const response = await fetch(uri);
@@ -235,14 +253,17 @@ async function storePic(UID, uri, pic_name, bar_type, bar_data, loc)
     ref.put(blob, metadata).then((snapshot) => {
       console.log("INFO: User uploaded a picture named " + pic_name);
       alert("Picture successfully uploaded.");
+      loading = false
     })
     .catch((error) => {
       console.log("ERROR: " + String(error))
       alert("Picture could not be uploaded, please try later.");
+      loading = false
     });
   }
   else { //Makes sure user enters a location name
     alert("Please enter a name for this image.")
+    loading = false
   }
 }
 

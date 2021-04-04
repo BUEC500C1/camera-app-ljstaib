@@ -54,7 +54,7 @@ function HomeScreen({ navigation }) {
       //setListItems(MarkerArray);
       console.log("INFO: Loaded array of images and metadata")
       console.log(MarkerArray)
-      var img, title, lat, long;
+      var img, title, lat, long; //Create the marker modules themselves
       for (var i = 0; i < MarkerArray.length; i++) { //0: image, 1: title, 2: latitude, 3: longitude
         img = MarkerArray[i][0]
         title = MarkerArray[i][1]
@@ -145,7 +145,7 @@ function HomeScreen({ navigation }) {
     );
   }
 
-  async function getMarkers(U_ID) {
+  async function getMarkers(U_ID) { //Get data for markers
     console.log("INFO: getMarkers() called")
     var folderRef, picRef, storageRef
     var date_created, id, path, pic, pic_name

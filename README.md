@@ -2,6 +2,9 @@
 
 Homework #4 for EC500 at Boston University, Spring 2021. Luke Staib (ljstaib@bu.edu) @2021. I chose Option 1, cloud based for this assignment.
 
+# Builds
+I have built an Android Package File (APK) of this assignment. Please email me if you would like to see this.
+
 # Expo
 I will be using the Expo framework for this assignment. Expo is useful as it is an add-on to the standard React library. Using Expo makes development, testing, and deployment more simple. For development, there are extra useful libraries (expo-camera, expo-maps, expo-face-detector, and so on). For testing, I am able to use the "Expo Go" mobile application for iOS and Android to see how the application will look on a local device before deployment. Finally, deployment is straightforward since I can utilize a few terminal commands to package the application.
 

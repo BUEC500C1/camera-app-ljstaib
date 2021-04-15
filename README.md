@@ -8,6 +8,9 @@ I have built an Android Package File (APK) of this assignment. Please email me i
 # Expo
 I will be using the Expo framework for this assignment. Expo is useful as it is an add-on to the standard React library. Using Expo makes development, testing, and deployment more simple. For development, there are extra useful libraries (expo-camera, expo-maps, expo-face-detector, and so on). For testing, I am able to use the "Expo Go" mobile application for iOS and Android to see how the application will look on a local device before deployment. Finally, deployment is straightforward since I can utilize a few terminal commands to package the application.
 
+# Testing
+On 4/14, I have decided to add some simple unit testing for this application. I will be finished within a few days. So far, I have a test function on the Login Screen to make sure everything renders correctly on that screen.
+
 # Status
 - Step 1: Completed
 - Step 2: Completed

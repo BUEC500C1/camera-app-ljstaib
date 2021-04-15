@@ -9,7 +9,12 @@ I have built an Android Package File (APK) of this assignment. Please email me i
 I will be using the Expo framework for this assignment. Expo is useful as it is an add-on to the standard React library. Using Expo makes development, testing, and deployment more simple. For development, there are extra useful libraries (expo-camera, expo-maps, expo-face-detector, and so on). For testing, I am able to use the "Expo Go" mobile application for iOS and Android to see how the application will look on a local device before deployment. Finally, deployment is straightforward since I can utilize a few terminal commands to package the application.
 
 # Testing
-On 4/14, I have decided to add some simple unit testing for this application. I will be finished within a few days. So far, I have a test function on the Login Screen to make sure everything renders correctly on that screen.
+- I have some basic unit tests for this application using Jest. The tests feature coverage for all of the screens and other JavaScript files in the application. Please see "CoverageTesting.png" for an example. There are large gaps in the coverage testing because of the React Native and Expo functions/syntax that I implemented, but I made sure to add "catch" statements for most functions.
+- I have a test for the login screen and the sign up screen to test that everything renders as intended. Unfortunately, I am unable to do the same tests for the camera screen, home screen, and photo list screen since Jest will throw an error because these screens need to have an authenticated Firebase session to work.
+
+# Running the application
+- Upon downloading the repository, run "expo start" to load the Expo interface. From here, you can use the "Expo Go" application (in the app store) to run the application using a QR code. Or, you can type "a" to run the application on an Android emulator or you can press "i" to run the application on an iPhone simulator.
+- To run my unit tests using Jest, run "npm run test"
 
 # Status
 - Step 1: Completed

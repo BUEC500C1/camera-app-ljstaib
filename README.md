@@ -2,6 +2,8 @@
 
 Homework #4 for EC500 at Boston University, Spring 2021. Luke Staib (ljstaib@bu.edu) @2021. I chose Option 1, cloud based for this assignment.
 
+# Please see "FinalDemo.mp4" for a working demonstration of my application.
+
 # Builds
 I have built an Android Package File (APK) of this assignment. Please email me if you would like to see this.
 

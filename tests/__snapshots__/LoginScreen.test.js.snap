@@ -1,0 +1,165 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<LoginScreen /> renders correctly 1`] = `
+<View
+  style={
+    Object {
+      "alignItems": "center",
+      "backgroundColor": "#ffffed",
+      "flex": 1,
+      "justifyContent": "center",
+    }
+  }
+>
+  <Text
+    style={
+      Object {
+        "color": "black",
+        "fontFamily": "Helvetica-Bold",
+        "fontSize": 48,
+        "textAlign": "center",
+      }
+    }
+  >
+    Scanner Application
+  </Text>
+  <Image
+    resizeMethod="scale"
+    resizeMode="contain"
+    source={1}
+    style={
+      Object {
+        "height": 200,
+        "marginBottom": 5,
+        "marginTop": 5,
+        "width": 150,
+      }
+    }
+  />
+  <TextInput
+    allowFontScaling={true}
+    autoCapitalize="none"
+    autoCompleteType="off"
+    autoCorrect={false}
+    maxLength={32}
+    onChangeText={[Function]}
+    onSubmitEditing={[Function]}
+    placeholder="Email"
+    rejectResponderTermination={true}
+    style={
+      Object {
+        "backgroundColor": "white",
+        "borderColor": "black",
+        "borderRadius": 5,
+        "borderWidth": 2,
+        "color": "black",
+        "fontFamily": "Helvetica",
+        "fontSize": 24,
+        "marginBottom": 10,
+        "textAlign": "center",
+        "width": "80%",
+      }
+    }
+    underlineColorAndroid="transparent"
+    value={null}
+  />
+  <TextInput
+    allowFontScaling={true}
+    autoCapitalize="none"
+    autoCompleteType="off"
+    autoCorrect={false}
+    maxLength={32}
+    onChangeText={[Function]}
+    onSubmitEditing={[Function]}
+    placeholder="Password"
+    rejectResponderTermination={true}
+    secureTextEntry={true}
+    style={
+      Object {
+        "backgroundColor": "white",
+        "borderColor": "black",
+        "borderRadius": 5,
+        "borderWidth": 2,
+        "color": "black",
+        "fontFamily": "Helvetica",
+        "fontSize": 24,
+        "marginBottom": 10,
+        "textAlign": "center",
+        "width": "80%",
+      }
+    }
+    underlineColorAndroid="transparent"
+    value={null}
+  />
+  <View
+    accessible={true}
+    focusable={true}
+    onClick={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      Object {
+        "backgroundColor": "#ffe29c",
+        "borderRadius": 30,
+        "height": 50,
+        "justifyContent": "center",
+        "marginBottom": 10,
+        "opacity": 1,
+        "padding": 1,
+        "width": "60%",
+      }
+    }
+  >
+    <Text
+      style={
+        Object {
+          "color": "white",
+          "fontSize": 32,
+          "textAlign": "center",
+        }
+      }
+    >
+      Login
+    </Text>
+  </View>
+  <View
+    accessible={true}
+    focusable={true}
+    onClick={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      Object {
+        "backgroundColor": "#ffe29c",
+        "borderRadius": 30,
+        "height": 50,
+        "justifyContent": "center",
+        "marginBottom": 10,
+        "opacity": 1,
+        "padding": 1,
+        "width": "60%",
+      }
+    }
+  >
+    <Text
+      style={
+        Object {
+          "color": "white",
+          "fontSize": 32,
+          "textAlign": "center",
+        }
+      }
+    >
+      Sign Up
+    </Text>
+  </View>
+</View>
+`;

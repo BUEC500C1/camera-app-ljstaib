@@ -165,7 +165,7 @@ function CameraScreen({ navigation }) {
               style = {Styles.name_input_text}
               value = {pictureName}
           />
-          <TouchableOpacity onPress = {() => {pic_saved = null; location = null; setPictureName(null); setScanState(false); setBarcodeType(null); setBarcodeData(null);} } style={Styles.generalButton}>
+          <TouchableOpacity onPress = {() => {pic_saved = null; location = []; setPictureName(null); setScanState(false); setBarcodeType(null); setBarcodeData(null);} } style={Styles.generalButton}>
             <Text style={Styles.white_text}>Take another picture!</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress = {() => {Keyboard.dismiss(); storePic(U_ID, pic_saved, pictureName, barcodeType, barcodeData, location); setPictureName(null); setPictureName(null); setScanState(false); setBarcodeType(null); setBarcodeData(null);}} style={Styles.generalButton}>
@@ -197,7 +197,9 @@ async function savePic(camRef)
     })
     //The method below is much faster than getCurrentPositionAsync() and is still accurate
     let current_loc = await Location.getLastKnownPositionAsync({})
-    location.push(current_loc.coords.latitude, current_loc.coords.longitude)
+    console.log(current_loc)
+    location.push(current_loc.coords.latitude)
+    location.push(current_loc.coords.longitude)
     //console.log(`INFO: User's latitude and longitude: ${location}`)
     pic_saved = photo.uri
   }
